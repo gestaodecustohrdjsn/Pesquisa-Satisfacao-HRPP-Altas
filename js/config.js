@@ -1,5 +1,5 @@
 const CONFIG = {
-  APP_VERSION: "1.1.0",
+  APP_VERSION: "1.1.1",
   APP_NAME: "Pesquisa de Satisfação - HRPP - Altas",
 
   // Cole aqui a URL /exec do Web App do Google Apps Script.
