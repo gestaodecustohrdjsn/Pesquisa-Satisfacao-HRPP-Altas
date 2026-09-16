@@ -152,8 +152,8 @@ function renderPerfil() {
   `).join("");
 
   tela.innerHTML = cardBase(
-    "Como você se identifica?",
-    "Selecione uma opção.",
+    "Identificação",
+    "Selecione uma opção",
     `<div class="options-grid">${botoes}</div>`
   );
 
@@ -174,7 +174,7 @@ function renderSetor() {
   `).join("");
 
   tela.innerHTML = cardBase(
-    "Setor de internação do paciente",
+    "Setor de Internação do Paciente",
     "Em qual setor ocorreu a internação?",
     `<div class="options-grid sector-grid">${botoes}</div>`
   );
@@ -280,7 +280,7 @@ function renderServicos() {
 
   tela.innerHTML = cardBase(
     "Que nota você dá para:",
-    "Avalie cada item de 0 a 10. Ao concluir todos os itens, a pesquisa será finalizada.",
+    "Avalie cada item de 0 a 10",
     `<div class="services-stack">${cards}</div>`
   );
 
