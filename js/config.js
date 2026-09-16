@@ -24,13 +24,13 @@ const CONFIG = {
   ],
 
   setores: [
-    { valor: "CLÍNICA MÉDICA", rotulo: "Clínica Médica", icone: "./assets/icons/leito.svg" },
-    { valor: "CLÍNICA CIRÚRGICA I", rotulo: "Clínica Cirúrgica I", icone: "./assets/icons/leito.svg" },
-    { valor: "CLÍNICA CIRÚRGICA II", rotulo: "Clínica Cirúrgica II", icone: "./assets/icons/leito.svg" },
+    { valor: "CLÍNICA MÉDICA", rotulo: "Clínica Médica", icone: "./assets/icons/clinica_medica.svg" },
+    { valor: "CLÍNICA CIRÚRGICA I", rotulo: "Clínica Cirúrgica I", icone: "./assets/icons/clinica_cirurgica_I.svg" },
+    { valor: "CLÍNICA CIRÚRGICA II", rotulo: "Clínica Cirúrgica II", icone: "./assets/icons/clinica_cirurgica_II.svg" },
     { valor: "MATERNIDADE", rotulo: "Maternidade", icone: "./assets/icons/maternidade.svg" },
     { valor: "PEDIATRIA", rotulo: "Pediatria", icone: "./assets/icons/pediatria.svg" },
-    { valor: "UTI A", rotulo: "UTI A", icone: "./assets/icons/uti.svg" },
-    { valor: "UTI B", rotulo: "UTI B", icone: "./assets/icons/uti.svg" }
+    { valor: "UTI A", rotulo: "UTI A", icone: "./assets/icons/uti_a.svg" },
+    { valor: "UTI B", rotulo: "UTI B", icone: "./assets/icons/uti_b.svg" }
   ],
 
   avaliacaoGeral: [

@@ -1,4 +1,4 @@
-const CACHE_NAME = "hrpp-altas-v1.1.0";
+const CACHE_NAME = "hrpp-altas-v1.1.1";
 
 const ARQUIVOS = [
   "./",
@@ -12,10 +12,13 @@ const ARQUIVOS = [
   "./assets/icons/paciente.svg",
   "./assets/icons/visitante.svg",
   "./assets/icons/acompanhante.svg",
-  "./assets/icons/leito.svg",
+  "./assets/icons/clinica_medica.svg",
+  "./assets/icons/clinica_cirurgica_I.svg",
+  "./assets/icons/clinica_cirurgica_II.svg",
   "./assets/icons/maternidade.svg",
   "./assets/icons/pediatria.svg",
-  "./assets/icons/uti.svg",
+  "./assets/icons/uti_a.svg",
+  "./assets/icons/uti_b.svg",
   "./assets/icons/limpeza.svg",
   "./assets/icons/muito-satisfeito.svg",
   "./assets/icons/satisfeito.svg",
