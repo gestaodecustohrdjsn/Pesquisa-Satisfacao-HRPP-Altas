@@ -43,6 +43,7 @@ const Sync = {
         try {
           await this.enviarRegistro(registro);
           await DB.marcarSincronizado(registro.id_resposta);
+          await atualizarIndicadores();
         } catch (erro) {
           console.warn("Falha ao sincronizar:", registro.id_resposta, erro);
           break;
@@ -70,14 +71,16 @@ async function atualizarIndicadores() {
   try {
     const quantidade = await DB.contarPendentes();
     statusFila.textContent = `${quantidade} pendente(s)`;
+    statusFila.classList.toggle("hidden", quantidade === 0);
   } catch {
     statusFila.textContent = "Fila indisponível";
+    statusFila.classList.remove("hidden");
   }
 }
 
-window.addEventListener("online", () => {
-  atualizarIndicadores();
-  Sync.sincronizar();
+window.addEventListener("online", async () => {
+  await Sync.sincronizar();
+  await atualizarIndicadores();
 });
 
 window.addEventListener("offline", atualizarIndicadores);

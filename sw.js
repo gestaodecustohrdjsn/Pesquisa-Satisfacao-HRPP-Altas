@@ -1,4 +1,4 @@
-const CACHE_NAME = "hrpp-altas-v1.0.0";
+const CACHE_NAME = "hrpp-altas-v1.1.0";
 
 const ARQUIVOS = [
   "./",
@@ -8,24 +8,31 @@ const ARQUIVOS = [
   "./js/config.js",
   "./js/storage.js",
   "./js/sync.js",
-  "./js/app.js"
+  "./js/app.js",
+  "./assets/icons/paciente.svg",
+  "./assets/icons/visitante.svg",
+  "./assets/icons/acompanhante.svg",
+  "./assets/icons/leito.svg",
+  "./assets/icons/maternidade.svg",
+  "./assets/icons/pediatria.svg",
+  "./assets/icons/uti.svg",
+  "./assets/icons/limpeza.svg",
+  "./assets/icons/muito-satisfeito.svg",
+  "./assets/icons/satisfeito.svg",
+  "./assets/icons/pouco-satisfeito.svg",
+  "./assets/icons/insatisfeito.svg",
+  "./assets/icons/indiferente.svg"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ARQUIVOS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ARQUIVOS)));
   self.skipWaiting();
 });
 
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(chaves =>
-      Promise.all(
-        chaves
-          .filter(chave => chave !== CACHE_NAME)
-          .map(chave => caches.delete(chave))
-      )
+      Promise.all(chaves.filter(chave => chave !== CACHE_NAME).map(chave => caches.delete(chave)))
     )
   );
   self.clients.claim();

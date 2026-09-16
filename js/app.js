@@ -72,6 +72,13 @@ function atualizarVoltar() {
   btnVoltar.classList.toggle("hidden", estado.etapa === 0 || etapaAtual() === "fim");
 }
 
+function atualizarProgresso() {
+  const barra = document.getElementById("progressBar");
+  if (!barra || !estado.fluxo.length) return;
+  const percentual = Math.min(100, ((estado.etapa + 1) / estado.fluxo.length) * 100);
+  barra.style.width = `${percentual}%`;
+}
+
 function cardBase(titulo, subtitulo, conteudo) {
   return `
     <div class="screen-card">
@@ -84,6 +91,7 @@ function cardBase(titulo, subtitulo, conteudo) {
 
 function renderizar() {
   atualizarVoltar();
+  atualizarProgresso();
 
   const etapa = etapaAtual();
 
@@ -138,7 +146,7 @@ function renderDados() {
 function renderPerfil() {
   const botoes = CONFIG.perfis.map(item => `
     <button class="option-btn" data-valor="${item.valor}">
-      <span class="option-icon">${item.icone}</span>
+      <span class="option-icon"><img src="${item.icone}" alt="" aria-hidden="true"></span>
       <span class="option-label">${item.rotulo}</span>
     </button>
   `).join("");
@@ -160,7 +168,7 @@ function renderPerfil() {
 function renderSetor() {
   const botoes = CONFIG.setores.map(item => `
     <button class="option-btn" data-valor="${item.valor}">
-      <span class="option-icon">${item.icone}</span>
+      <span class="option-icon"><img src="${item.icone}" alt="" aria-hidden="true"></span>
       <span class="option-label">${item.rotulo}</span>
     </button>
   `).join("");
@@ -227,7 +235,7 @@ function renderFidelizacao() {
 function renderAvaliacao() {
   const botoes = CONFIG.avaliacaoGeral.map(item => `
     <button class="satisfaction ${item.classe}" data-valor="${item.valor}">
-      <span class="face">${item.rosto}</span>
+      <span class="face"><img src="${item.icone}" alt="" aria-hidden="true"></span>
       <span>${item.rotulo}</span>
     </button>
   `).join("");
@@ -262,7 +270,7 @@ function renderServicos() {
     return `
       <article class="service-card">
         <div class="service-head">
-          <div class="service-icon">${servico.icone}</div>
+          <div class="service-icon"><img src="${servico.icone}" alt="" aria-hidden="true"></div>
           <h3 class="service-title">${servico.nome}</h3>
         </div>
         <div class="rating-scale">${notas}</div>
@@ -321,6 +329,8 @@ async function finalizarPesquisa() {
 
 function mostrarAgradecimento(comErro = false) {
   btnVoltar.classList.add("hidden");
+  const barra = document.getElementById("progressBar");
+  if (barra) barra.style.width = "100%";
 
   tela.innerHTML = `
     <div class="screen-card thanks">

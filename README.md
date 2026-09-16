@@ -84,3 +84,10 @@ Em `CONFIG.servicos`, adicione:
 }
 
 O Apps Script adicionará automaticamente a nova coluna `nota_alimentacao` caso ela ainda não exista.
+
+
+## Versão 1.1.0
+- Interface visual revisada.
+- Ícones SVG próprios.
+- Barra de progresso.
+- Correção do contador de pendências após retorno da internet.

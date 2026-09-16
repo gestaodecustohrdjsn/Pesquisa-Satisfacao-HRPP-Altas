@@ -24,9 +24,14 @@
       </div>
     </header>
 
-    <section class="status-bar" aria-live="polite">
-      <span id="statusConexao" class="status-pill">Verificando conexão…</span>
-      <span id="statusFila" class="status-pill subtle">0 pendente(s)</span>
+    <section class="top-meta">
+      <div class="progress-wrap" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <section class="status-bar" aria-live="polite">
+        <span id="statusConexao" class="status-pill">Verificando conexão…</span>
+        <span id="statusFila" class="status-pill subtle hidden">0 pendente(s)</span>
+      </section>
     </section>
 
     <section id="tela" class="screen" aria-live="polite"></section>
