@@ -4,7 +4,8 @@ const CONFIG = {
 
   // Cole aqui a URL /exec do Web App do Google Apps Script.
   // SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzMC5BLSlbiYbKRU1gQqEXLDG9muAhTSkF5KT6H_9BSUuwcLHXGAd3acB8WpBlFXdoqNw/exec",
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycby2gaCdBavbYNKUGi36OOLry4qkCTrV_le-gI0CfkwbT__DMjr2Y3_1bP_d_ukyuHkRjQ/exec",
+  // SCRIPT_URL: "https://script.google.com/macros/s/AKfycby2gaCdBavbYNKUGi36OOLry4qkCTrV_le-gI0CfkwbT__DMjr2Y3_1bP_d_ukyuHkRjQ/exec",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzTYOvm7XtQ-fh2229bk7XfST4VE5sbkyzhWnZhfHcGat-XQjtm_K-WXb9v3WGH4WeA6w/exec",
 
   TEMPO_AGRADECIMENTO_MS: 3500,
 
