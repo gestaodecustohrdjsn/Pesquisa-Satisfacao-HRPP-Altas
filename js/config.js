@@ -3,7 +3,8 @@ const CONFIG = {
   APP_NAME: "Pesquisa de Satisfação - HRPP - Altas",
 
   // Cole aqui a URL /exec do Web App do Google Apps Script.
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzMC5BLSlbiYbKRU1gQqEXLDG9muAhTSkF5KT6H_9BSUuwcLHXGAd3acB8WpBlFXdoqNw/exec",
+  // SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzMC5BLSlbiYbKRU1gQqEXLDG9muAhTSkF5KT6H_9BSUuwcLHXGAd3acB8WpBlFXdoqNw/exec",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycby2gaCdBavbYNKUGi36OOLry4qkCTrV_le-gI0CfkwbT__DMjr2Y3_1bP_d_ukyuHkRjQ/exec",
 
   TEMPO_AGRADECIMENTO_MS: 3500,
 
