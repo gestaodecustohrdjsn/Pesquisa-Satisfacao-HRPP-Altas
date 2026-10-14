@@ -19,10 +19,29 @@ function gerarId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
 }
 
+function obterBlocosNotasAtivos() {
+  return AVALIACOES_NOTA
+    .filter(bloco => bloco.ativo !== false)
+    .map(bloco => ({
+      ...bloco,
+      itens: bloco.itens.filter(item => item.ativo !== false)
+    }))
+    .filter(bloco => bloco.itens.length > 0);
+}
+
 function construirFluxo() {
   const fluxo = [];
-  if (CONFIG.dadosPessoais.ativo) fluxo.push("dados");
-  fluxo.push("perfil", "setor", "fidelizacao", "avaliacao", "servicos");
+
+  if (CONFIG.dadosPessoais.ativo) {
+    fluxo.push("dados");
+  }
+
+  fluxo.push("perfil", "setor", "fidelizacao", "avaliacao");
+
+  obterBlocosNotasAtivos().forEach((_, indice) => {
+    fluxo.push(`notas:${indice}`);
+  });
+
   return fluxo;
 }
 
@@ -44,9 +63,11 @@ function iniciarPesquisa() {
     origem_envio: navigator.onLine ? "ONLINE" : "OFFLINE/SINCRONIZADO"
   };
 
-  CONFIG.servicos
-    .filter(s => s.ativo)
-    .forEach(s => estado.resposta[s.campoPlanilha] = "");
+  obterBlocosNotasAtivos().forEach(bloco => {
+    bloco.itens.forEach(item => {
+      estado.resposta[item.campoPlanilha] = "";
+    });
+  });
 
   renderizar();
 }
@@ -105,7 +126,10 @@ function renderizar() {
   if (etapa === "setor") renderSetor();
   if (etapa === "fidelizacao") renderFidelizacao();
   if (etapa === "avaliacao") renderAvaliacao();
-  if (etapa === "servicos") renderServicos();
+  if (etapa && etapa.startsWith("notas:")) {
+    const indiceBloco = Number(etapa.split(":")[1]);
+    renderBlocoNotas(indiceBloco);
+  }
 }
 
 function renderDados() {
@@ -152,8 +176,8 @@ function renderPerfil() {
   `).join("");
 
   tela.innerHTML = cardBase(
-    "Identificação",
-    "Selecione uma opção",
+    "Como você se identifica?",
+    "Selecione uma opção.",
     `<div class="options-grid">${botoes}</div>`
   );
 
@@ -174,7 +198,7 @@ function renderSetor() {
   `).join("");
 
   tela.innerHTML = cardBase(
-    "Setor de Internação do Paciente",
+    "Setor de internação do paciente",
     "Em qual setor ocorreu a internação?",
     `<div class="options-grid sector-grid">${botoes}</div>`
   );
@@ -254,51 +278,164 @@ function renderAvaliacao() {
   });
 }
 
-function renderServicos() {
-  const servicos = CONFIG.servicos.filter(s => s.ativo);
+function valorNotaRespondido(valor) {
+  return valor !== "" && valor !== null && valor !== undefined;
+}
 
-  const cards = servicos.map(servico => {
-    const notas = Array.from({ length: 11 }, (_, i) => `
+function renderBlocoNotas(indiceBloco) {
+  const blocos = obterBlocosNotasAtivos();
+  const bloco = blocos[indiceBloco];
+
+  if (!bloco) {
+    avancar();
+    return;
+  }
+
+  const ultimoBloco = indiceBloco === blocos.length - 1;
+
+  const legenda = `
+    <div class="rating-legend" aria-label="Referência da escala">
+      <span><strong>0–2</strong> Ruim</span>
+      <span><strong>3–4</strong> Regular</span>
+      <span><strong>5–6</strong> Bom</span>
+      <span><strong>7–8</strong> Ótimo</span>
+      <span><strong>9–10</strong> Excelente</span>
+    </div>
+  `;
+
+  const cards = bloco.itens.map((item, itemIndex) => {
+    const valorAtual = estado.resposta[item.campoPlanilha];
+
+    const notas = Array.from({ length: 11 }, (_, nota) => `
       <button
-        class="rating-btn ${String(estado.resposta[servico.campoPlanilha]) === String(i) ? "selected" : ""}"
-        data-servico="${servico.campoPlanilha}"
-        data-nota="${i}">
-        ${i}
+        type="button"
+        class="rating-btn ${String(valorAtual) === String(nota) ? "selected" : ""}"
+        data-campo="${item.campoPlanilha}"
+        data-valor="${nota}"
+        aria-pressed="${String(valorAtual) === String(nota)}">
+        ${nota}
       </button>
     `).join("");
 
+    const naoSeAplicaSelecionado = valorAtual === VALOR_NAO_SE_APLICA;
+
     return `
-      <article class="service-card">
-        <div class="service-head">
-          <div class="service-icon"><img src="${servico.icone}" alt="" aria-hidden="true"></div>
-          <h3 class="service-title">${servico.nome}</h3>
+      <article class="service-card rating-question-card">
+        <div class="rating-question-head">
+          <span class="rating-question-number">${itemIndex + 1}</span>
+          <h3 class="service-title">${item.nome}</h3>
         </div>
-        <div class="rating-scale">${notas}</div>
+
+        <div class="rating-scale">
+          ${notas}
+        </div>
+
+        <button
+          type="button"
+          class="rating-na ${naoSeAplicaSelecionado ? "selected" : ""}"
+          data-campo="${item.campoPlanilha}"
+          data-valor="${VALOR_NAO_SE_APLICA}"
+          aria-pressed="${naoSeAplicaSelecionado}">
+          Não se aplica
+        </button>
       </article>
     `;
   }).join("");
 
   tela.innerHTML = cardBase(
     "Que nota você dá para:",
-    "Avalie cada item de 0 a 10",
-    `<div class="services-stack">${cards}</div>`
+    `${bloco.titulo}`,
+    `
+      <div class="rating-step">
+        <span>Avaliação ${indiceBloco + 1} de ${blocos.length}</span>
+        <p>${bloco.descricao || ""}</p>
+      </div>
+
+      ${legenda}
+
+      <div class="services-stack rating-block-stack">
+        ${cards}
+      </div>
+
+      <div class="rating-actions">
+        <p id="mensagemNotas" class="rating-message" aria-live="polite"></p>
+        <button
+          type="button"
+          class="primary-btn rating-continue-btn"
+          id="continuarNotas"
+          disabled>
+          ${ultimoBloco ? "Finalizar" : "Continuar"}
+        </button>
+      </div>
+    `
   );
 
-  tela.querySelectorAll(".rating-btn").forEach(btn => {
-    btn.onclick = () => {
-      const campo = btn.dataset.servico;
-      estado.resposta[campo] = Number(btn.dataset.nota);
+  const botaoContinuar = document.getElementById("continuarNotas");
+  const mensagemNotas = document.getElementById("mensagemNotas");
 
-      tela.querySelectorAll(`[data-servico="${campo}"]`).forEach(item => {
-        item.classList.toggle("selected", item === btn);
-      });
+  const blocoConcluido = () =>
+    bloco.itens.every(item => valorNotaRespondido(estado.resposta[item.campoPlanilha]));
 
-      const concluiu = servicos.every(s => estado.resposta[s.campoPlanilha] !== "");
-      if (concluiu) {
-        setTimeout(finalizarPesquisa, 300);
-      }
+  const atualizarBotao = () => {
+    const concluido = blocoConcluido();
+    botaoContinuar.disabled = !concluido;
+
+    if (concluido) {
+      mensagemNotas.textContent = "Todas as avaliações deste bloco foram respondidas.";
+      mensagemNotas.classList.add("complete");
+    } else {
+      const faltantes = bloco.itens.filter(
+        item => !valorNotaRespondido(estado.resposta[item.campoPlanilha])
+      ).length;
+
+      mensagemNotas.textContent =
+        faltantes === 1
+          ? "Falta responder 1 item."
+          : `Faltam responder ${faltantes} itens.`;
+
+      mensagemNotas.classList.remove("complete");
+    }
+  };
+
+  const marcarSelecao = (campo, valorSelecionado) => {
+    tela.querySelectorAll(`[data-campo="${campo}"]`).forEach(botao => {
+      const selecionado = String(botao.dataset.valor) === String(valorSelecionado);
+      botao.classList.toggle("selected", selecionado);
+      botao.setAttribute("aria-pressed", String(selecionado));
+    });
+  };
+
+  tela.querySelectorAll(".rating-btn, .rating-na").forEach(botao => {
+    botao.onclick = () => {
+      const campo = botao.dataset.campo;
+      const valor = botao.dataset.valor;
+
+      estado.resposta[campo] =
+        valor === VALOR_NAO_SE_APLICA
+          ? VALOR_NAO_SE_APLICA
+          : Number(valor);
+
+      marcarSelecao(campo, estado.resposta[campo]);
+      atualizarBotao();
     };
   });
+
+  botaoContinuar.onclick = async () => {
+    if (!blocoConcluido()) {
+      atualizarBotao();
+      return;
+    }
+
+    botaoContinuar.disabled = true;
+
+    if (ultimoBloco) {
+      await finalizarPesquisa();
+    } else {
+      avancar();
+    }
+  };
+
+  atualizarBotao();
 }
 
 async function finalizarPesquisa() {
