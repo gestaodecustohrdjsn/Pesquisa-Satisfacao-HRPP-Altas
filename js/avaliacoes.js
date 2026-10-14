@@ -23,7 +23,7 @@ const AVALIACOES_NOTA = [
       {
         id: "silencio",
         campoPlanilha: "nota_silencio",
-        nome: "Como você avalia o silêncio no hospital para descansar?",
+        nome: "Como você avalia o silêncio no hospital?",
         icone: "./assets/icons/nota-silencio.svg",
         naLabel: "Não se aplica",
         ativo: true
