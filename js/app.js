@@ -293,17 +293,7 @@ function renderBlocoNotas(indiceBloco) {
 
   const ultimoBloco = indiceBloco === blocos.length - 1;
 
-  const legenda = `
-    <div class="rating-legend" aria-label="Referência da escala">
-      <span><strong>0–2</strong> Ruim</span>
-      <span><strong>3–4</strong> Regular</span>
-      <span><strong>5–6</strong> Bom</span>
-      <span><strong>7–8</strong> Ótimo</span>
-      <span><strong>9–10</strong> Excelente</span>
-    </div>
-  `;
-
-  const cards = bloco.itens.map((item, itemIndex) => {
+  const cards = bloco.itens.map(item => {
     const valorAtual = estado.resposta[item.campoPlanilha];
 
     const notas = Array.from({ length: 11 }, (_, nota) => `
@@ -312,17 +302,21 @@ function renderBlocoNotas(indiceBloco) {
         class="rating-btn ${String(valorAtual) === String(nota) ? "selected" : ""}"
         data-campo="${item.campoPlanilha}"
         data-valor="${nota}"
-        aria-pressed="${String(valorAtual) === String(nota)}">
+        aria-pressed="${String(valorAtual) === String(nota)}"
+        aria-label="Nota ${nota}">
         ${nota}
       </button>
     `).join("");
 
     const naoSeAplicaSelecionado = valorAtual === VALOR_NAO_SE_APLICA;
+    const naLabel = item.naLabel || "Não se aplica";
 
     return `
       <article class="service-card rating-question-card">
         <div class="rating-question-head">
-          <span class="rating-question-number">${itemIndex + 1}</span>
+          <span class="rating-question-icon">
+            <img src="${item.icone}" alt="" aria-hidden="true">
+          </span>
           <h3 class="service-title">${item.nome}</h3>
         </div>
 
@@ -336,29 +330,22 @@ function renderBlocoNotas(indiceBloco) {
           data-campo="${item.campoPlanilha}"
           data-valor="${VALOR_NAO_SE_APLICA}"
           aria-pressed="${naoSeAplicaSelecionado}">
-          Não se aplica
+          <span class="rating-na-icon">✕</span>
+          <span>${naLabel}</span>
         </button>
       </article>
     `;
   }).join("");
 
   tela.innerHTML = cardBase(
-    "Que nota você dá para:",
-    `${bloco.titulo}`,
+    bloco.titulo,
+    "",
     `
-      <div class="rating-step">
-        <span>Avaliação ${indiceBloco + 1} de ${blocos.length}</span>
-        <p>${bloco.descricao || ""}</p>
-      </div>
-
-      ${legenda}
-
       <div class="services-stack rating-block-stack">
         ${cards}
       </div>
 
       <div class="rating-actions">
-        <p id="mensagemNotas" class="rating-message" aria-live="polite"></p>
         <button
           type="button"
           class="primary-btn rating-continue-btn"
@@ -371,30 +358,12 @@ function renderBlocoNotas(indiceBloco) {
   );
 
   const botaoContinuar = document.getElementById("continuarNotas");
-  const mensagemNotas = document.getElementById("mensagemNotas");
 
   const blocoConcluido = () =>
     bloco.itens.every(item => valorNotaRespondido(estado.resposta[item.campoPlanilha]));
 
   const atualizarBotao = () => {
-    const concluido = blocoConcluido();
-    botaoContinuar.disabled = !concluido;
-
-    if (concluido) {
-      mensagemNotas.textContent = "Todas as avaliações deste bloco foram respondidas.";
-      mensagemNotas.classList.add("complete");
-    } else {
-      const faltantes = bloco.itens.filter(
-        item => !valorNotaRespondido(estado.resposta[item.campoPlanilha])
-      ).length;
-
-      mensagemNotas.textContent =
-        faltantes === 1
-          ? "Falta responder 1 item."
-          : `Faltam responder ${faltantes} itens.`;
-
-      mensagemNotas.classList.remove("complete");
-    }
+    botaoContinuar.disabled = !blocoConcluido();
   };
 
   const marcarSelecao = (campo, valorSelecionado) => {
@@ -421,10 +390,7 @@ function renderBlocoNotas(indiceBloco) {
   });
 
   botaoContinuar.onclick = async () => {
-    if (!blocoConcluido()) {
-      atualizarBotao();
-      return;
-    }
+    if (!blocoConcluido()) return;
 
     botaoContinuar.disabled = true;
 

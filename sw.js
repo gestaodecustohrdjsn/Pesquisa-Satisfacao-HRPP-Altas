@@ -1,4 +1,4 @@
-const CACHE_NAME = "hrpp-altas-v1.2.0";
+const CACHE_NAME = "hrpp-altas-v1.2.1";
 
 const ARQUIVOS_ESSENCIAIS = [
   "./",
@@ -9,7 +9,19 @@ const ARQUIVOS_ESSENCIAIS = [
   "./js/avaliacoes.js",
   "./js/storage.js",
   "./js/sync.js",
-  "./js/app.js"
+  "./js/app.js",
+  "./assets/icons/nota-limpeza.svg",
+  "./assets/icons/nota-sinalizacao.svg",
+  "./assets/icons/nota-silencio.svg",
+  "./assets/icons/nota-informacoes.svg",
+  "./assets/icons/nota-confianca.svg",
+  "./assets/icons/nota-medico.svg",
+  "./assets/icons/nota-enfermagem.svg",
+  "./assets/icons/nota-outros.svg",
+  "./assets/icons/nota-cuidados.svg",
+  "./assets/icons/nota-alta.svg",
+  "./assets/icons/nota-ouvidoria.svg",
+  "./assets/icons/nota-atendimento.svg"
 ];
 
 self.addEventListener("install", event => {
